@@ -16,7 +16,7 @@
         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.76
         Device            :  PIC16F18446
         Driver Version    :  2.00
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -39,7 +39,7 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #include "mcc_generated_files/mcc.h"
 
@@ -47,13 +47,13 @@ uint8_t isRunning = 1;
 
 void pinIsr() {
     __delay_ms(5);
-    if(RC7)
+    if (RC7)
         return; // ignore bouncy button releases
-    
-    if(isRunning) {
+
+    if (isRunning) {
         TMR0_StopTimer();
         isRunning = 0;
-        
+
     } else {
         TMR0_StartTimer();
         isRunning = 1;
@@ -63,8 +63,7 @@ void pinIsr() {
 /*
                          Main application
  */
-void main(void)
-{
+void main(void) {
     // initialize the device
     SYSTEM_Initialize();
     IOCCF7_SetInterruptHandler(pinIsr);
@@ -84,11 +83,12 @@ void main(void)
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
 
-    while (1)
-    {
-
+    while (1) {
+        if (!isRunning) {
+            SLEEP();
+        }
     }
 }
 /**
  End of File
-*/
+ */
